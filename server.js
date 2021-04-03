@@ -1,6 +1,9 @@
 const express = require('express');
 const PORT = process.env.PORT || 3001;
 const app = express();
+const fs = require('fs');
+const path = require('path');
+
 const { notes } = require('./db/db.json');
 
 // parse incoming string or array data
@@ -10,15 +13,31 @@ app.use(express.json());
 
 app.use(express.static('public'));
 
+function createNewNote(body, notesArray) {
+    const newNote = body;
+    notesArray.push(newNote);
+    fs.writeFileSync(
+        path.join(__dirname, './db/db.json'),
+        JSON.stringify({ notes: notesArray }, null, 2)
+    );
+    return newNote;
+};
+
 app.get('/api/notes', (req, res) => {
     res.json(notes);
     console.log(notes);
 });
 
 app.post('/api/notes', (req, res) => {
-    console.log(req.body);
-    notes.push(req.body)
-    res.json(req.body);
+
+    const note = createNewNote(req.body, notes);
+    if ((req.body) !== 'string') {
+        res.status(400).send('Cannot be empty');
+    }
+    else {
+    }
+    res.json(note);
+    console.log("New note created!")
 });
 
 
