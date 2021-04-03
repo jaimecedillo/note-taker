@@ -4,17 +4,22 @@ const app = express();
 const { notes } = require('./db/db.json');
 
 // parse incoming string or array data
-// app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 // parse incoming JSON data
-// app.use(express.json());
+app.use(express.json());
 
-// app.use(express.static('public'));
+app.use(express.static('public'));
 
 app.get('/api/notes', (req, res) => {
     res.json(notes);
     console.log(notes);
 });
 
+app.post('/api/notes', (req, res) => {
+    console.log(req.body);
+    notes.push(req.body)
+    res.json(req.body);
+});
 
 
 app.listen(PORT, () => {
