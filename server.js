@@ -1,8 +1,10 @@
+// required dependencies
 const express = require('express');
 const PORT = process.env.PORT || 3001;
 const app = express();
 const fs = require('fs');
 const path = require('path');
+// id generator
 const { v4: uuidv4 } = require('uuid');
 
 
@@ -13,6 +15,7 @@ app.use(express.json());
 
 app.use(express.static('public'));
 
+// create new note function
 function createNewNote(body, notesArray) {
     const newNote = body;
     newNote.id = uuidv4();
@@ -24,6 +27,7 @@ function createNewNote(body, notesArray) {
     return newNote;
 };
 
+// Get API notes
 app.get('/api/notes', async (req, res) => {
     try {
         let allNotes = await fs.readFileSync(
@@ -33,7 +37,7 @@ app.get('/api/notes', async (req, res) => {
         res.json(err)
     }
 });
-
+// post API notes
 app.post('/api/notes', async (req, res) => {
     let allNotes = await fs.readFileSync(
         path.join(__dirname, './db/db.json'), "utf8");
@@ -48,6 +52,7 @@ app.post('/api/notes', async (req, res) => {
     }
 });
 
+// delete API notes
 app.delete('/api/notes/:id', async (req, res) => {
     let allNotes = await fs.readFileSync(
         path.join(__dirname, './db/db.json'), "utf8"
@@ -62,16 +67,18 @@ app.delete('/api/notes/:id', async (req, res) => {
     return res.json(newNotes);
 })
 
+// notes route
 app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname, './public/notes.html'));
 });
 
+// index route
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, './public/index.html'));
 });
 
 
-
+// Server listener
 app.listen(PORT, () => {
     console.log(`API server now on port ${PORT}!`);
 });
