@@ -58,7 +58,8 @@ app.delete('/api/notes/:id', async (req, res) => {
     fs.writeFileSync(
         path.join(__dirname, './db/db.json'),
         JSON.stringify(newNotes, null, 2)
-    );
+    )
+    return res.json(newNotes);
 })
 
 app.get('/notes', (req, res) => {
