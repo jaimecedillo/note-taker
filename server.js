@@ -3,7 +3,7 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 const fs = require('fs');
 const path = require('path');
-
+const { v4: uuidv4 } = require('uuid');
 
 
 // parse incoming string or array data
@@ -15,6 +15,7 @@ app.use(express.static('public'));
 
 function createNewNote(body, notesArray) {
     const newNote = body;
+    newNote.id = uuidv4();
     notesArray.push(newNote);
     fs.writeFileSync(
         path.join(__dirname, './db/db.json'),
@@ -50,7 +51,18 @@ app.post('/api/notes', async (req, res) => {
     }
 });
 
-
+app.delete('/api/notes/:id', async (req, res) => {
+    var allNotes = await fs.readFileSync(
+        path.join(__dirname, './db/db.json'), "utf8"
+    );
+    let newNotes = JSON.parse(allNotes).filter((note) => {
+        return note.id !== req.params.id
+    })
+    fs.writeFileSync(
+        path.join(__dirname, './db/db.json'),
+        JSON.stringify(newNotes, null, 2)
+    );
+})
 
 app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname, './public/notes.html'));
