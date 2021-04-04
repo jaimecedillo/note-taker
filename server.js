@@ -26,9 +26,8 @@ function createNewNote(body, notesArray) {
 
 app.get('/api/notes', async (req, res) => {
     try {
-        var allNotes = await fs.readFileSync(
-            path.join(__dirname, './db/db.json'), "utf8"
-        );
+        let allNotes = await fs.readFileSync(
+            path.join(__dirname, './db/db.json'), "utf8");
         res.json(JSON.parse(allNotes));
         console.log(allNotes);
     } catch (err) {
@@ -37,9 +36,8 @@ app.get('/api/notes', async (req, res) => {
 });
 
 app.post('/api/notes', async (req, res) => {
-    var allNotes = await fs.readFileSync(
-        path.join(__dirname, './db/db.json'), "utf8"
-    );
+    let allNotes = await fs.readFileSync(
+        path.join(__dirname, './db/db.json'), "utf8");
 
     const note = await createNewNote(req.body, JSON.parse(allNotes));
     if ((req.body.text) === '' || (req.body.title) === '') {
@@ -52,11 +50,11 @@ app.post('/api/notes', async (req, res) => {
 });
 
 app.delete('/api/notes/:id', async (req, res) => {
-    var allNotes = await fs.readFileSync(
+    let allNotes = await fs.readFileSync(
         path.join(__dirname, './db/db.json'), "utf8"
     );
     let newNotes = JSON.parse(allNotes).filter((note) => {
-        return note.id !== req.params.id
+        return note.id !== req.params.id;
     })
     fs.writeFileSync(
         path.join(__dirname, './db/db.json'),
