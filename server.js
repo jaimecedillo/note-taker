@@ -29,7 +29,6 @@ app.get('/api/notes', async (req, res) => {
         let allNotes = await fs.readFileSync(
             path.join(__dirname, './db/db.json'), "utf8");
         res.json(JSON.parse(allNotes));
-        console.log(allNotes);
     } catch (err) {
         res.json(err)
     }
