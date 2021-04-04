@@ -4,7 +4,7 @@ const app = express();
 const fs = require('fs');
 const path = require('path');
 
-const { notes } = require('./db/db.json');
+
 
 // parse incoming string or array data
 app.use(express.urlencoded({ extended: true }));
@@ -18,26 +18,36 @@ function createNewNote(body, notesArray) {
     notesArray.push(newNote);
     fs.writeFileSync(
         path.join(__dirname, './db/db.json'),
-        JSON.stringify({ notes: notesArray }, null, 2)
+        JSON.stringify(notesArray, null, 2)
     );
     return newNote;
 };
 
-app.get('/api/notes', (req, res) => {
-    res.json(notes);
-    console.log(notes);
+app.get('/api/notes', async (req, res) => {
+    try {
+        var allNotes = await fs.readFileSync(
+            path.join(__dirname, './db/db.json'), "utf8"
+        );
+        res.json(JSON.parse(allNotes));
+        console.log(allNotes);
+    } catch (err) {
+        res.json(err)
+    }
 });
 
-app.post('/api/notes', (req, res) => {
+app.post('/api/notes', async (req, res) => {
+    var allNotes = await fs.readFileSync(
+        path.join(__dirname, './db/db.json'), "utf8"
+    );
 
-    const note = createNewNote(req.body, notes);
-    if ((req.body) !== 'string') {
+    const note = await createNewNote(req.body, JSON.parse(allNotes));
+    if ((req.body.text) === '' || (req.body.title) === '') {
         res.status(400).send('Cannot be empty');
     }
     else {
+        res.json(note);
+        console.log("New note created!")
     }
-    res.json(note);
-    console.log("New note created!")
 });
 
 
