@@ -1,3 +1,4 @@
+
 # Note Taker
 
 An app to write, save and delete notes.
@@ -24,4 +25,4 @@ An app to write, save and delete notes.
 ## Screenshot
 
 
-![Application Screenshot](https://github.com/jaimecedillo/note-taker/blob/main/screenshot.png)
+![Application Screenshot](https://user-images.githubusercontent.com/74879881/120933625-2f9c8100-c6b8-11eb-88ec-5b0d4bf0431b.png)
